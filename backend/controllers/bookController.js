@@ -33,7 +33,6 @@ const getOneBook = async (req, res) => {
 }
 
 const createBook = async (req, res) => {
-    console.log("book");
     try {
         const { title, author } = req.body;
         const existingBook = await Book.findOne({ title, author });
@@ -94,10 +93,6 @@ const updateBook = async (req, res) => {
 
 const deleteBook = async (req, res) => {
     const { id } = req.params;
-
-    if (!book) {
-        return res.status(404).json({ error: "Book is not exist" });
-    }
 
     try {
         const book = await Book.findById(id);
