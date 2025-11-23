@@ -12,7 +12,8 @@
 import SectionHeader from '@/components/SectionHeader.vue';
 import BookList from '@/components/BookList.vue';
 import Pagination from '@/components/Pagination.vue';
-import books from "@/db.js";
+import axios from 'axios';
+
 export default {
   name: "BooksView",
   components: {
@@ -22,7 +23,7 @@ export default {
   },
   data() {
     return {
-      books: books,
+      books: [],
       currentPage: 1,
       itemsPerPage: 8
     }
@@ -40,9 +41,15 @@ export default {
   methods: {
     updatePage(page) {
       this.currentPage = page
+    },
+    async getBooks(){
+        const data = await axios.get('http://localhost:3000/api/v1/books/');
+        this.books = data.data;
     }
+  },
+  created(){
+    this.getBooks();
   }
-
 }
 </script>
 
