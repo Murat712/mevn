@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Book from "../models/Book.js";
+import { checkValidationErrors } from "../utlis/index.js";
 
 const getAllBooks = async (req, res) => {
     try {
@@ -46,13 +47,7 @@ const createBook = async (req, res) => {
     }
     catch (error) {
         if (error.name === 'ValidationError') {
-            const ValidationErrors = {}
-
-            for (let field in error.errors) {
-                ValidationErrors[field] = error.errors[field].message;
-            }
-
-            return res.status(400).json({ error: "Validation Error", ValidationErrors });
+            if (checkValidationErrors(error, res)) return;
         }
         else {
             console.error("error at creating book", error);
