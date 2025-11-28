@@ -30,7 +30,12 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="accordion">
+          <div class="d-flex justify-content-center" v-if="isLoading">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div class="accordion" v-else>
             <div
               class="accordion-item"
               v-for="(book, index) in filteredBooks"
@@ -83,6 +88,8 @@ import SectionHeader from '@/components/SectionHeader.vue';
 import hero_1 from '@/assets/images/hero_1.jpg';
 import hero_2 from '@/assets/images/hero_2.jpg';
 import hero_3 from '@/assets/images/hero_3.jpg';
+import { useBookStore } from '@/stores/bookStore';
+import { mapState } from 'pinia';
 
 export default {
   name: 'HomeView',
@@ -112,26 +119,15 @@ export default {
             'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
         },
       ],
-      books: [],
+      bookStore: useBookStore(),
       selectedFilter: 'latest',
       openAccordionIndex: 0,
     };
   },
 
-  created() {
-    this.fetchBooks();
-  },
-
   methods: {
     selectFiler(filter) {
       this.selectedFilter = filter;
-    },
-    async fetchBooks() {
-      try {
-        const response = await fetch('http://localhost:3000/api/v1/books');
-        const data = await response.json();
-        this.books = data;
-      } catch (error) {}
     },
     toggleAccordion(index) {
       if (this.openAccordionIndex === index) {
@@ -141,10 +137,11 @@ export default {
       }
     },
   },
+
   computed: {
+    ...mapState(useBookStore,['books','isLoading']),
     filteredBooks() {
       const copiedBooks = [...this.books];
-
       if (this.selectedFilter === 'latest') {
         return copiedBooks
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
