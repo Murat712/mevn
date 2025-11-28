@@ -12,7 +12,6 @@
 import SectionHeader from '@/components/SectionHeader.vue';
 import BookList from '@/components/BookList.vue';
 import Pagination from '@/components/Pagination.vue';
-import axios from 'axios';
 
 export default {
   name: "BooksView",
@@ -42,14 +41,22 @@ export default {
     updatePage(page) {
       this.currentPage = page
     },
-    async getBooks(){
-        const data = await axios.get('http://localhost:3000/api/v1/books/');
-        this.books = data.data;
+
+    async fetchBooks() {
+      try {
+        const respnse = await fetch('http://localhost:3000/api/v1/books');
+        const data = await respnse.json();
+        this.books = data;
+      } catch (error) {
+
+      }
     }
   },
-  created(){
-    this.getBooks();
+
+  created() {
+    this.fetchBooks();
   }
+
 }
 </script>
 

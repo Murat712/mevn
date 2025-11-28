@@ -24,7 +24,7 @@
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Upload Date</strong></div>
-              <div class="col-lg-6">{{ book.createdAt }}</div>
+              <div class="col-lg-6">{{ book.updatedAt }}</div>
             </div>
           </div>
 
@@ -94,14 +94,13 @@
         </div>
       </div>
     </div>
-    <div class="container" v-if="loading">
-      <p>book detail is loading</p>
+    <div class="container" v-else>
+      <p>Book Detail loading...</p>
     </div>
   </section>
 </template>
 
 <script>
-import axios from 'axios';
 import SectionHeader from '@/components/SectionHeader.vue';
 export default {
   name: "BookDetailView",
@@ -111,21 +110,26 @@ export default {
   data() {
     return {
       book: null,
-      loading: true,
+      loading: true
     }
   },
   created() {
-    this.getBook();
+    this.fetchABook();
   },
   methods: {
     goToBackBooks() {
       this.$router.push({ name: "books" })
     },
-    async getBook(){
-      const bookID = this.$route.params.id;
-      const data = await axios.get(`http://localhost:3000/api/v1/books/${bookID}`);
-      this.book = data.data;
-      this.loading = false;
+    async fetchABook() {
+      const bookId = this.$route.params.id;
+      try {
+        const response = await fetch(`http://localhost:3000/api/v1/books/${bookId}`);
+        const data = await response.json();
+        this.book = data;
+        this.loading = false;
+      } catch (error) {
+
+      }
     }
   }
 }

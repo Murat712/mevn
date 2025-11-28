@@ -4,7 +4,7 @@ import Book from "../models/Book.js";
 const getAllBooks = async (req, res) => {
     try {
         const books = await Book.find();
-        res.status(200).json(books)
+        res.status(200).json(books);
     } catch (error) {
         console.error("error at get book", error);
         return res.status(500).json({ error: "Internal Server Error" });
@@ -109,4 +109,4 @@ const deleteBook = async (req, res) => {
     }
 }
 
-export { getAllBooks, createBook, getOneBook, updateBook, deleteBook }
+export { getAllBooks, createBook, getOneBook, updateBook, deleteBook };
