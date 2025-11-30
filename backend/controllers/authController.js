@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { checkValidationErrors } from "../utlis/index.js";
+import jwt from 'jsonwebtoken';
 
 const register = async (req, res) => {
     try {
@@ -49,7 +50,9 @@ const login = async (req, res) => {
         }
 
         user.password = undefined;
-        return res.status(200).json({ message: 'User logined in successfullt', user });
+
+        const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWR_EXPIRE_TIME })
+        return res.status(200).json({ message: 'User logined in successfullt', user, token });
     } catch (error) {
         if (error.name === 'ValidationError') {
             if (checkValidationErrors(error, res)) return;

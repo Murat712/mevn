@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('authStore', {
     getters: {
         isLoggedIn: (state) => {
             return !!state.user;
-        }
+        },
     },
 
     actions: {
@@ -21,9 +21,10 @@ export const useAuthStore = defineStore('authStore', {
                 );
                 return response.data;
             } catch (error) {
-                throw error;
+                throw error.response.data;
             }
         },
+
         async login(userData) {
             try {
                 const response = await axios.post(
@@ -40,6 +41,6 @@ export const useAuthStore = defineStore('authStore', {
             this.user = null;
             localStorage.removeItem('user');
             location.reload();
-        }
+        },
     },
 });
