@@ -10,13 +10,16 @@
           <RouterLink class="nav-link" :to="{ name: 'books' }">Books</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" :to="{ name: 'contact' }">Contact Us</RouterLink>
+          <RouterLink class="nav-link" :to="{ name: 'dashboard' }" v-if="isLoggedIn">Dashboard</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" :to="{ name: 'login' }">Login</RouterLink>
+          <RouterLink class="nav-link" :to="{ name: 'login' }" v-if="!isLoggedIn">Login</RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link" :to="{ name: 'register' }">Register</RouterLink>
+          <RouterLink class="nav-link" :to="{ name: 'register' }" v-if="!isLoggedIn">Register</RouterLink>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" @click="logoutUser" v-if="isLoggedIn">Logout</button>
         </li>
       </ul>
     </div>
@@ -24,11 +27,22 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/authStore.js';
+import { mapState, mapActions } from 'pinia';
 export default {
   name: "NavBar",
   data() {
     return {
       brandName: "Bostorek"
+    }
+  },
+  computed:{
+    ...mapState(useAuthStore, ['isLoggedIn']),
+  },
+  methods:{
+    ...mapActions(useAuthStore, ['logout']),
+    logoutUser(){
+      this.logout();
     }
   }
 }

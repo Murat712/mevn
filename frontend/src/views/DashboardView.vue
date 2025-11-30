@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <SectionHeader title="Contact Us" text="We declare long prop names using camelCase because this avoids" />
-  </div>
+    <h1>{{ user.username }}</h1>
+    <h2>{{ user.email }}</h2>
 </template>
 
 <script>
-import SectionHeader from '@/components/SectionHeader.vue';
+import { useAuthStore } from '@/stores/authStore.js';
+import { mapState } from 'pinia';
 export default {
-  name: "ContactView",
-  components: {
-    SectionHeader
-  }
+    name: "ContactView",
+    computed: {
+        ...mapState(useAuthStore,['user']),
+    }
 }
 </script>
 
